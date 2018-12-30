@@ -142,6 +142,7 @@ public class ToolFragment extends Fragment {
         });
 
         mReturnDateButton = (Button) v.findViewById(R.id.return_tool_date);
+        updateReturnDate();
         mReturnDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -154,6 +155,7 @@ public class ToolFragment extends Fragment {
         });
 
         mReturnTimeButton = (Button) v.findViewById(R.id.return_tool_time);
+        updateReturnTime();
         mReturnTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
