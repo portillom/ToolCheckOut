@@ -189,8 +189,8 @@ public class ToolListFragment extends Fragment {
         private TextView mToolNameTextView;
         private TextView mDateTextView;
         private Tool mTool;
-
-
+        private ImageView mReturnedImageView;
+        private TextView mReturnDateTextView;
 
         public ToolHolder(LayoutInflater inflater, ViewGroup parent, int viewType){
             super(inflater.inflate(viewType, parent, false));
@@ -198,48 +198,8 @@ public class ToolListFragment extends Fragment {
 
             mToolNameTextView = (TextView) itemView.findViewById(R.id.tool_name);       //R.6
             mDateTextView = (TextView) itemView.findViewById(R.id.tool_date);           //R.6
-
-        }
-
-        /**
-         *This method will be called each time a new Tool should be displayed in ToolHolder.
-         * ToolHolder will now update the title TextView and date TextView to reflect the
-         * state of the Tool.
-         *                      R.7
-         * @param tool
-         */
-        public void bind(Tool tool){
-            mTool = tool;
-            mToolNameTextView.setText(mTool.getToolName());
-            mDateTextView.setText(String.format(getString(R.string.list_item_out)) + DateFormat.format("MM/dd/yy h:mm a", mTool.getDate()).toString());
-        }
-
-        @Override
-        public void onClick(View view){
-            Intent intent = ToolPagerActivity.newIntent(getActivity(), mTool.getId());
-            startActivity(intent);
-        }
-    }
-
-    private class ToolHolderReturned extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-        private TextView mToolNameTextView;
-        private TextView mDateTextView;
-        private TextView mReturnDateTextView;
-        private ImageView mReturnedImageView;
-        private Tool mTool;
-
-
-
-        public ToolHolderReturned(LayoutInflater inflater, ViewGroup parent, int viewType){
-            super(inflater.inflate(viewType, parent, false));
-            itemView.setOnClickListener(this);
-
-            mToolNameTextView = (TextView) itemView.findViewById(R.id.tool_name);       //R.6
-            mDateTextView = (TextView) itemView.findViewById(R.id.tool_date);           //R.6
             mReturnDateTextView = (TextView) itemView.findViewById(R.id.tool_return_date);
             mReturnedImageView = (ImageView) itemView.findViewById(R.id.tool_returned_image);
-
         }
 
         /**
@@ -253,7 +213,11 @@ public class ToolListFragment extends Fragment {
             mTool = tool;
             mToolNameTextView.setText(mTool.getToolName());
             mDateTextView.setText(String.format(getString(R.string.list_item_out)) + DateFormat.format("MM/dd/yy h:mm a", mTool.getDate()).toString());
-            mReturnDateTextView.setText(String.format(getString(R.string.list_item_in)) + DateFormat.format("MM/dd/yy h:mm a", mTool.getReturnDate()).toString());
+            if(tool.isReturned()){
+                mReturnDateTextView.setText(String.format(getString(R.string.list_item_in))
+                        + DateFormat.format("MM/dd/yy h:mm a", mTool.getReturnDate())
+                        .toString());
+            }
             mReturnedImageView.setVisibility(tool.isReturned() ? View.VISIBLE : View.GONE);
         }
 
@@ -263,6 +227,7 @@ public class ToolListFragment extends Fragment {
             startActivity(intent);
         }
     }
+
 
     /**
      * When the RecyclerView needs to display a new ViewHolder or connect a Tool object to an
@@ -287,19 +252,8 @@ public class ToolListFragment extends Fragment {
          */
         @Override
         public ToolHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            View view;
-            switch(viewType){
-                case R.layout.list_item_tool:
-                    LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
-                    return new ToolHolder(layoutInflater, parent, viewType);
-
-                case R.layout.list_item_tool_return_date:
-                    layoutInflater = LayoutInflater.from(getActivity());
-                    return new ToolHolderReturned(layoutInflater, parent, viewType);
-
-            }
-            return null;
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            return new ToolHolder(layoutInflater, parent, viewType);
 
         }
 
